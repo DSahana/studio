@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Home, Briefcase, Save, User, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const accountFormSchema = z.object({
   name: z.string().min(2, {
@@ -43,6 +44,7 @@ const defaultValues: Partial<AccountFormValues> = {
 };
 
 export default function AccountPage() {
+  const router = useRouter();
   const { toast } = useToast();
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
@@ -55,6 +57,7 @@ export default function AccountPage() {
       description: 'Your account settings have been updated.',
     });
     console.log(data);
+    router.push('/');
   }
 
   return (
