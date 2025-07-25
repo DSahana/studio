@@ -1,103 +1,48 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import type { Message } from '@/lib/types';
-import AppHeader from '@/components/layout/app-header';
-import { ChatMessage } from '@/components/chat/chat-message';
-import { ChatInput } from '@/components/chat/chat-input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { generateOnboardingPrompt } from '@/ai/flows/generate-onboarding-prompt';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import GoogleIcon from '@/components/icons/google';
 
-export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+export default function LoginPage() {
+  const router = useRouter();
 
-  useEffect(() => {
-    const fetchOnboarding = async () => {
-      try {
-        const { onboardingPrompt } = await generateOnboardingPrompt({});
-        setMessages([
-          {
-            id: 'onboarding-1',
-            role: 'assistant',
-            content: onboardingPrompt,
-          },
-        ]);
-      } catch (error) {
-        console.error('Failed to generate onboarding prompt:', error);
-        setMessages([
-          {
-            id: 'error-1',
-            role: 'assistant',
-            content: 'Welcome to AskAtlas! How can I help you navigate today?',
-          },
-        ]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchOnboarding();
-  }, []);
-
-  useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [messages]);
-  
-
-  const handleSendMessage = async (userInput: string) => {
-    setIsLoading(true);
-    const newUserMessage: Message = {
-      id: `user-${Date.now()}`,
-      role: 'user',
-      content: userInput,
-    };
-
-    const loadingMessage: Message = {
-        id: `assistant-loading-${Date.now()}`,
-        role: 'assistant',
-        content: <div className="flex items-center space-x-2">
-            <Skeleton className="h-2 w-2 rounded-full" />
-            <Skeleton className="h-2 w-2 rounded-full" />
-            <Skeleton className="h-2 w-2 rounded-full" />
-        </div>,
-    }
-
-    setMessages((prev) => [...prev, newUserMessage, loadingMessage]);
-
-    // Simulate AI response
-    setTimeout(() => {
-        const aiResponse: Message = {
-            id: `assistant-${Date.now()}`,
-            role: 'assistant',
-            content: `I've received your request: "${userInput}". The AI navigation tools are currently under development. Thanks for using AskAtlas!`,
-          };
-      setMessages((prev) => [...prev.slice(0, -1), aiResponse]);
-      setIsLoading(false);
-    }, 2000);
+  const handleLogin = () => {
+    // In a real app, this would involve a call to a Firebase/Auth provider.
+    // For this UI-only demo, we'll just navigate to the chat page.
+    router.push('/chat');
   };
 
   return (
-    <div className="flex h-screen w-full flex-col bg-muted/30">
-      <AppHeader />
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="max-w-3xl mx-auto p-4 md:p-6">
-            <div className="space-y-6">
-              {messages.map((message) => (
-                <ChatMessage key={message.id} message={message} />
-              ))}
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md shadow-2xl">
+        <CardHeader className="text-center">
+          <div className="mb-4 flex justify-center">
+            <div className="bg-primary/20 text-primary rounded-full p-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-navigation"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
             </div>
           </div>
-        </ScrollArea>
-      </div>
-      <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+          <CardTitle className="font-headline text-3xl">Welcome to AskAtlas</CardTitle>
+          <CardDescription className="font-body text-muted-foreground pt-2">
+            Your conversational navigation assistant. Sign in to continue.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-4">
+            <Button 
+              onClick={handleLogin} 
+              className="w-full bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 shadow-sm"
+            >
+              <GoogleIcon className="mr-3" />
+              Sign in with Google
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      <footer className="mt-8 text-center text-sm text-muted-foreground">
+        <p>&copy; {new Date().getFullYear()} AskAtlas. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

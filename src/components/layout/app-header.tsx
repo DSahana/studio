@@ -19,7 +19,7 @@ export default function AppHeader() {
 
   return (
     <header className="flex h-16 items-center justify-between border-b bg-background/80 px-4 md:px-6 backdrop-blur-sm sticky top-0 z-10">
-      <Link href="/" className="flex items-center gap-2">
+      <Link href="/chat" className="flex items-center gap-2">
         <div className="bg-primary/20 text-primary rounded-full p-2">
            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-navigation"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
         </div>
@@ -51,7 +51,7 @@ export default function AppHeader() {
             <span>Account Settings</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => router.push('/login')}>
+          <DropdownMenuItem onClick={() => router.push('/')}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>
           </DropdownMenuItem>

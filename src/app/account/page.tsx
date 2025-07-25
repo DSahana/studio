@@ -57,14 +57,14 @@ export default function AccountPage() {
       description: 'Your account settings have been updated.',
     });
     console.log(data);
-    router.push('/');
+    router.push('/chat');
   }
 
   return (
     <div className="min-h-screen bg-muted/30">
       <header className="flex h-16 items-center border-b bg-background/80 px-4 md:px-6 backdrop-blur-sm sticky top-0 z-10">
         <Button variant="outline" size="icon" asChild>
-          <Link href="/">
+          <Link href="/chat">
             <ArrowLeft className="h-4 w-4" />
             <span className="sr-only">Back</span>
           </Link>
