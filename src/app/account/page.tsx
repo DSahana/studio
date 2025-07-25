@@ -16,10 +16,14 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Home, Briefcase, Save } from 'lucide-react';
+import { ArrowLeft, Home, Briefcase, Save, User, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const accountFormSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  email: z.string().email(),
   homeAddress: z.string().min(5, {
     message: 'Home address must be at least 5 characters.',
   }).optional().or(z.literal('')),
@@ -30,7 +34,10 @@ const accountFormSchema = z.object({
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
+// In a real app, these default values would be populated from your auth provider.
 const defaultValues: Partial<AccountFormValues> = {
+  name: 'Guest User',
+  email: 'guest@example.com',
   homeAddress: '',
   workAddress: '',
 };
@@ -45,7 +52,7 @@ export default function AccountPage() {
   function onSubmit(data: AccountFormValues) {
     toast({
       title: 'Settings Saved!',
-      description: 'Your home and work addresses have been updated.',
+      description: 'Your account settings have been updated.',
     });
     console.log(data);
   }
@@ -65,14 +72,49 @@ export default function AccountPage() {
       <main className="flex justify-center p-4 md:p-8">
         <Card className="w-full max-w-2xl shadow-lg">
           <CardHeader>
-            <CardTitle className="font-headline">Personalized Navigation</CardTitle>
+            <CardTitle className="font-headline">Account Information</CardTitle>
             <CardDescription>
-              Set your home and work addresses for faster navigation with quick actions.
+              Manage your account and personalized navigation settings.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                 <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center text-base">
+                        <User className="mr-2 h-5 w-5 text-primary" />
+                        Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center text-base">
+                        <Mail className="mr-2 h-5 w-5 text-primary" />
+                        Email
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="your.email@example.com" {...field} readOnly />
+                      </FormControl>
+                      <FormDescription>
+                        Your email address is linked to your sign-in provider and cannot be changed here.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="homeAddress"
