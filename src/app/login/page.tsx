@@ -38,10 +38,6 @@ export default function LoginPage() {
               <GoogleIcon className="mr-3" />
               Sign in with Google
             </Button>
-            <Button variant="link" onClick={() => router.push('/')}>
-              Continue as guest
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
           </div>
         </CardContent>
       </Card>
